@@ -30,7 +30,9 @@
             background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.8;
+            /* Increased for better readability */
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Animated gradient background */
@@ -335,20 +337,33 @@
         }
 
         .project-visual {
-            background: linear-gradient(135deg, var(--accent-light) 0%, transparent 100%);
-            border-radius: 24px;
-            height: 400px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 32px;
+            height: 500px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Syne', sans-serif;
-            font-size: 6rem;
-            font-weight: 800;
-            color: var(--accent);
-            opacity: 0.3;
-            transition: all 0.5s ease;
+            padding: 40px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.02);
+        }
+
+        .project-visual img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover .project-visual img {
+            transform: translateY(-10px) scale(1.02);
         }
 
         .project-visual::before {
@@ -378,10 +393,12 @@
 
         .project-title {
             font-family: 'Syne', sans-serif;
-            font-size: 2.5rem;
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            /* Scaled for desktop */
             font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
         }
 
         .project-subtitle {
@@ -699,11 +716,16 @@
 
             <div class="projects-grid">
                 <div class="project-card">
-                    <div class="project-visual">01</div>
+                    <div class="project-visual">
+                        <img src="assets/wrong_answers_2.png" alt="خباثة Game Screen"
+                            style="margin-right: -40px; transform: rotate(-5deg); z-index: 1;">
+                        <img src="assets/wrong_answers_1.png" alt="خباثة Waiting Room"
+                            style="transform: rotate(5deg); z-index: 2;">
+                    </div>
                     <div class="project-content">
                         <div class="project-number">PROJECT 01</div>
-                        <h3 class="project-title">Wrong Answers</h3>
-                        <p class="project-subtitle">Viral Mobile Game</p>
+                        <h3 class="project-title">خباثة — Wrong Answers</h3>
+                        <p class="project-subtitle">Viral Multiplayer Trivia Game</p>
                         <p class="project-description">
                             A viral trivia game that reached 15,000+ downloads across mobile platforms.
                             Integrated Google AdMob and in-app purchases, leveraging Unity and Flutter
@@ -719,11 +741,16 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-visual">02</div>
+                    <div class="project-visual">
+                        <img src="assets/sajaya_auth.png" alt="Sajaya CRI Auth"
+                            style="margin-right: -40px; transform: rotate(-5deg); z-index: 1;">
+                        <img src="assets/sajaya_dashboard.png" alt="Sajaya CRI Dashboard"
+                            style="transform: rotate(5deg); z-index: 2;">
+                    </div>
                     <div class="project-content">
                         <div class="project-number">PROJECT 02</div>
                         <h3 class="project-title">Sajaya CRI</h3>
-                        <p class="project-subtitle">Cybersecurity Platform</p>
+                        <p class="project-subtitle">Cybersecurity Maturity Platform</p>
                         <p class="project-description">
                             Full-stack cybersecurity assessment platform with automated scoring algorithms
                             for calculating security maturity levels. Built with Flutter and Node.js,
@@ -739,7 +766,14 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-visual">03</div>
+                    <div class="project-visual">
+                        <img src="assets/mahalatna_1.png" alt="Mahalatna Product"
+                            style="margin-right: -60px; transform: rotate(-8deg); z-index: 1;">
+                        <img src="assets/mahalatna_2.png" alt="Mahalatna Home"
+                            style="z-index: 3; transform: scale(1.05);">
+                        <img src="assets/mahalatna_3.png" alt="Mahalatna Categories"
+                            style="margin-left: -60px; transform: rotate(8deg); z-index: 2;">
+                    </div>
                     <div class="project-content">
                         <div class="project-number">PROJECT 03</div>
                         <h3 class="project-title">Mahalatna</h3>
@@ -759,7 +793,10 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-visual">04</div>
+                    <div class="project-visual">
+                        <img src="assets/cheflens_logo.png" alt="ChefLens AI Logo"
+                            style="width: 80%; height: 80%; object-fit: contain;">
+                    </div>
                     <div class="project-content">
                         <div class="project-number">PROJECT 04</div>
                         <h3 class="project-title">ChefLens</h3>
@@ -773,6 +810,30 @@
                             <span class="tag">BLoC</span>
                             <span class="tag">Computer Vision</span>
                             <span class="tag">AI</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-visual">
+                        <img src="assets/support_system_1.png" alt="Support System Login"
+                            style="margin-right: -40px; transform: rotate(-5deg); z-index: 1;">
+                        <img src="assets/support_system_2.png" alt="Support System Dashboard"
+                            style="transform: rotate(5deg); z-index: 2;">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-number">PROJECT 05</div>
+                        <h3 class="project-title">Support System Tickets</h3>
+                        <p class="project-subtitle">Enterprise Ticket Management</p>
+                        <p class="project-description">
+                            Multi-role enterprise support platform featuring real-time ticket tracking,
+                            automated priority assignment, and comprehensive audit logs. Built with
+                            Flutter and a secure Node.js backend to handle concurrent support requests.
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">Flutter</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">MySQL</span>
+                            <span class="tag">Auth</span>
                         </div>
                     </div>
                 </div>
@@ -814,6 +875,31 @@
                         Created and published "Wrong Answers" - a viral trivia game reaching 15,000+ downloads.
                         Managed full development lifecycle from concept to deployment, including monetization
                         strategy through ads and in-app purchases.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label">Learning Path</div>
+                <h2 class="section-title">Education & Training</h2>
+            </div>
+
+            <div class="experience-list">
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <h3 class="experience-title">Intensive Flutter Development Course</h3>
+                            <div class="experience-company">6-Month Professional Program</div>
+                        </div>
+                        <div class="experience-date">6 Months</div>
+                    </div>
+                    <p class="experience-description">
+                        Comprehensive training in mobile architecture, state management (BLoC, Riverpod),
+                        and complex backend integration. Focused on building production-ready apps with
+                        clean code principles and performance optimization.
                     </p>
                 </div>
             </div>
