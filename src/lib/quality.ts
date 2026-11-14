@@ -45,7 +45,7 @@ const CONFIG: Record<Level, LevelConfig> = {
  * reflections and chromatic aberration.
  */
 export const levelConfig = (l: Level): LevelConfig => {
-  const c = CONFIG[l]
+  const c = l === 'low' && phone ? { ...CONFIG.low, dprMax: phoneDpr.get() } : CONFIG[l]
   // ...except on a machine that kept struggling all the way down to `low`: there one
   // recompile (a single hitch) is worth far more than a scene that never catches up.
   const post = CONFIG[ceiling].post && !(postDropped && l === 'low')
@@ -56,6 +56,15 @@ export const prefersReducedMotion =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export const isTouch = typeof window !== 'undefined' && window.matchMedia('(hover: none), (pointer: coarse)').matches
+/** A phone: touch, and a small screen. */
+const phone =
+  isTouch && typeof window !== 'undefined' && Math.min(window.innerWidth, window.screen?.width ?? window.innerWidth) < 768
+/**
+ * Phones start at `low`, but their screens are small: at 2× a phone draws about as many
+ * pixels as a laptop at 1×, and at 1× the 3D on a 3× screen is visibly blurry. So on a
+ * phone `low` keeps 2×; if even that is too slow, the governor steps it to 1.5×, then 1×.
+ */
+export const phoneDpr = createStore(phone ? 2 : 1)
 
 /** What the GPU says it is (unmasked where the browser allows it). */
 function gpuName(): string {
@@ -163,6 +172,17 @@ const percentile = (a: number[], p: number) => {
 function step(dir: -1 | 1, why: string) {
   const cur = quality.get()
   const i = ORDER.indexOf(cur) + dir
+  // Already at the bottom on a phone: lower the resolution instead.
+  if (i < 0 && phone && phoneDpr.get() > 1) {
+    const to = Math.max(1, phoneDpr.get() - 0.5)
+    perfStats.changes.push({ at: Math.round(performance.now()), from: cur, to: cur, why: `${why}; resolution ${to}×` })
+    if (perfStats.changes.length > 12) perfStats.changes.shift()
+    phoneDpr.set(to)
+    slow = 0
+    fine = 0
+    cooldown = COOLDOWN
+    return
+  }
   if (i < 0 || i > ORDER.indexOf(ceiling)) return
   const next = ORDER[i]
   perfStats.changes.push({ at: Math.round(performance.now()), from: cur, to: next, why })

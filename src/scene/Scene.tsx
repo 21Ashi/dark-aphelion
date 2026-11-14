@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { armQualityMonitor, ceiling, levelConfig, perfStats, prefersReducedMotion, quality, sampleFrame, tier } from '../lib/quality'
+import { armQualityMonitor, ceiling, levelConfig, perfStats, phoneDpr, prefersReducedMotion, quality, sampleFrame, tier } from '../lib/quality'
 import { motion } from '../lib/motion'
 import { useStore } from '../hooks/useStore'
 import { complete } from '../lib/loader'
@@ -128,6 +128,7 @@ const MONOLITHS = { ultra: 46, high: 46, medium: 34, low: 24 }[ceiling]
 
 export default function Scene() {
   const level = useStore(quality)
+  useStore(phoneDpr) // a phone's resolution step re-renders the canvas settings
   const cfg = levelConfig(level)
   const still = prefersReducedMotion
 
