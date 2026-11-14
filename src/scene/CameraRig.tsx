@@ -21,7 +21,7 @@ export function CameraRig({ still = false }: { still?: boolean }) {
 
   useFrame(({ clock }, dt) => {
     const s = state.current
-    const d = Math.min(dt, 1 / 20)
+    const d = Math.min(dt, 1 / 10)
     const k = 1 - Math.exp(-d * (still ? 50 : 2.6))
     s.chapter += (motion.chapter - s.chapter) * k
 

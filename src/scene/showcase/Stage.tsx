@@ -607,7 +607,7 @@ export default function Stage() {
       if (s.hover !== -1) worksHover.set((s.hover = -1))
       return
     }
-    const d = Math.min(dt, 1 / 20)
+    const d = Math.min(dt, 1 / 10)
     const t = clock.elapsedTime
     const px = motion.pointer.x
     const py = motion.pointer.y

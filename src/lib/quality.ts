@@ -46,7 +46,9 @@ const CONFIG: Record<Level, LevelConfig> = {
  */
 export const levelConfig = (l: Level): LevelConfig => {
   const c = CONFIG[l]
-  const post = CONFIG[ceiling].post
+  // ...except on a machine that kept struggling all the way down to `low`: there one
+  // recompile (a single hitch) is worth far more than a scene that never catches up.
+  const post = CONFIG[ceiling].post && !(postDropped && l === 'low')
   return { ...c, post, aberration: post && c.aberration }
 }
 
@@ -106,12 +108,21 @@ export const quality = createStore<Level>(ceiling)
 
 /* ── Runtime adaptation ─────────────────────────────────────────────── */
 
-const WINDOW = 60 // frames per evaluation window
-const BAD = 1.5 // a window is slow when its 90th percentile exceeds 1.5 refresh intervals
+const WINDOW = 60 // frames per evaluation window...
+const WINDOW_MS = 1500 // ...or this much time, whichever comes first (a slow machine gives few frames)
+const BAD = 1.5 // a window is slow when its 90th percentile exceeds 1.5 frame budgets
+const SEVERE = 3 // and badly slow beyond 3 (under ~17 fps): it counts twice
 const GOOD = 1.15 // and comfortable below 1.15
-const DOWN_AFTER = 4 // consecutive slow windows before stepping down
+const DOWN_AFTER = 4 // slow windows (severe ones count twice) before stepping down
 const UP_AFTER = 30 // consecutive comfortable windows before stepping up (doubles after each step down)
-const COOLDOWN = 6 // windows ignored after any change (new settings settle, shaders compile)
+const COOLDOWN = 4 // windows ignored after any change (new settings settle, shaders compile)
+/**
+ * The frame budget follows the display (120 Hz screens get 8.3 ms) but never exceeds 20 ms:
+ * a machine that only manages 20 fps must not be mistaken for a 20 Hz display.
+ */
+const MAX_BUDGET = 20
+/** A frame longer than this is a pause (hidden tab, a stall), not a measure of the device. */
+const GAP = 1000
 
 /** Live numbers for the development panel. */
 export const perfStats = {
@@ -125,7 +136,10 @@ export const perfStats = {
 }
 
 const win: number[] = []
+let winTime = 0
 const floors: number[] = []
+/** Set once the level fell all the way to `low`: post-processing goes too. */
+let postDropped = false
 let slow = 0
 let fine = 0
 let cooldown = COOLDOWN
@@ -133,9 +147,13 @@ let downs = 0
 /** Judging starts only once start-up work (intro, background compiles, uploads) is over. */
 let armed = false
 export function armQualityMonitor() {
+  if (armed) return
   armed = true
   cooldown = COOLDOWN
 }
+// Start-up normally arms it (Scene.tsx, after the intro and background compiles); on a
+// machine too slow to ever finish those, start judging anyway.
+if (typeof window !== 'undefined') window.setTimeout(armQualityMonitor, 25000)
 
 const percentile = (a: number[], p: number) => {
   const s = [...a].sort((x, y) => x - y)
@@ -149,6 +167,7 @@ function step(dir: -1 | 1, why: string) {
   const next = ORDER[i]
   perfStats.changes.push({ at: Math.round(performance.now()), from: cur, to: next, why })
   if (perfStats.changes.length > 12) perfStats.changes.shift()
+  if (dir < 0 && next === 'low') postDropped = true
   quality.set(next)
   if (dir < 0) downs++
   slow = 0
@@ -161,21 +180,23 @@ function step(dir: -1 | 1, why: string) {
  * Gaps (tab hidden, rendering paused) are ignored.
  */
 export function sampleFrame(ms: number) {
-  if (!(ms > 0) || ms > 250) return
+  if (!(ms > 0) || ms > GAP) return
   perfStats.frames[perfStats.head] = ms
   perfStats.head = (perfStats.head + 1) % perfStats.frames.length
   perfStats.count = Math.min(perfStats.count + 1, perfStats.frames.length)
   win.push(ms)
-  if (win.length < WINDOW) return
+  winTime += ms
+  if (win.length < WINDOW && (winTime < WINDOW_MS || win.length < 6)) return
 
-  // The display's own cadence: the fast end of recent windows (120, 60 or 30 Hz).
+  // The display's own cadence: the fast end of recent windows (120 or 60 Hz), capped.
   floors.push(percentile(win, 0.1))
   if (floors.length > 10) floors.shift()
-  const budget = Math.max(6, Math.min(...floors))
+  const budget = Math.min(MAX_BUDGET, Math.max(6, Math.min(...floors)))
   perfStats.budget = budget
   const p90 = percentile(win, 0.9)
   perfStats.lastP90 = p90
   win.length = 0
+  winTime = 0
 
   if (!armed || prefersReducedMotion || new URLSearchParams(location.search).has('quality')) return
   if (cooldown > 0) {
@@ -183,7 +204,8 @@ export function sampleFrame(ms: number) {
     return
   }
   if (p90 > budget * BAD) {
-    slow++
+    // "badly slow" is judged against 60 fps, so a fast 120 Hz screen's hitches never count double
+    slow += p90 > Math.max(budget, 1000 / 60) * SEVERE ? 2 : 1
     fine = 0
     if (slow >= DOWN_AFTER) step(-1, `p90 ${p90.toFixed(1)} ms over ${(budget * BAD).toFixed(1)} ms`)
   } else if (p90 <= budget * GOOD) {

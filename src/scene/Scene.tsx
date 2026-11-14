@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { armQualityMonitor, ceiling, levelConfig, prefersReducedMotion, quality, sampleFrame, tier } from '../lib/quality'
+import { armQualityMonitor, ceiling, levelConfig, perfStats, prefersReducedMotion, quality, sampleFrame, tier } from '../lib/quality'
 import { motion } from '../lib/motion'
 import { useStore } from '../hooks/useStore'
 import { complete } from '../lib/loader'
@@ -138,7 +138,7 @@ export default function Scene() {
       camera={{ fov: 40, near: 0.1, far: 1600, position: [0, 3.2, 40] }}
       onCreated={({ gl, scene }) => {
         // Development only: the renderer, for the perf harness and panel.
-        if (import.meta.env.DEV) Object.assign(window, { __aphelion: { gl, scene } })
+        if (import.meta.env.DEV) Object.assign(window, { __aphelion: { gl, scene, quality, perfStats } })
         gl.setClearColor('#080707')
         gl.toneMapping = THREE.ACESFilmicToneMapping
         gl.toneMappingExposure = 0.95

@@ -224,7 +224,7 @@ export function Showcase() {
     }
     g.visible = true
 
-    const d = Math.min(dt, 1 / 20)
+    const d = Math.min(dt, 1 / 10)
     const t = clock.elapsedTime
     s.cs += ((w.cs.open ? 1 : 0) - s.cs) * (1 - Math.exp(-d * 3))
     // CameraRig's portrait framing is by aspect; the stacked composition also covers narrow windows
