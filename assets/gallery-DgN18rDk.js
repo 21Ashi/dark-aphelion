@@ -1,0 +1,1 @@
+var e=e=>`/dark-aphelion/gallery/${e}-icon.webp`;export{e as t};
