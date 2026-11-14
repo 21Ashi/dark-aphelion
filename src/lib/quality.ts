@@ -117,18 +117,24 @@ export const quality = createStore<Level>(ceiling)
 
 /* ── Runtime adaptation ─────────────────────────────────────────────── */
 
-const WINDOW = 60 // frames per evaluation window...
-const WINDOW_MS = 1500 // ...or this much time, whichever comes first (a slow machine gives few frames)
+/**
+ * One evaluation window is a second of frames, whatever the display's rate: at 240 Hz
+ * a 60-frame window was a quarter of a second, short enough for one hitch to count.
+ */
+const WINDOW_MS = 1000
+const MIN_FRAMES = 6 // a very slow machine still needs a few frames per window
 const BAD = 1.5 // a window is slow when its 90th percentile exceeds 1.5 frame budgets
-const SEVERE = 3 // and badly slow beyond 3 (under ~17 fps): it counts twice
+const SEVERE = 3 // and badly slow beyond 3 × 16.7 ms (under 20 fps): it counts twice
 const GOOD = 1.15 // and comfortable below 1.15
 const DOWN_AFTER = 4 // slow windows (severe ones count twice) before stepping down
 const UP_AFTER = 30 // consecutive comfortable windows before stepping up (doubles after each step down)
 const COOLDOWN = 4 // windows ignored after any change (new settings settle, shaders compile)
 /**
- * The frame budget follows the display (120 Hz screens get 8.3 ms) but never exceeds 20 ms:
- * a machine that only manages 20 fps must not be mistaken for a 20 Hz display.
+ * The frame budget follows the display, within limits. Never tighter than 90 fps: a 144 or
+ * 240 Hz monitor must not make a machine running at 100+ fps look slow. Never looser than
+ * 50 fps: a machine that only manages 20 fps must not be mistaken for a 20 Hz display.
  */
+const MIN_BUDGET = 1000 / 90
 const MAX_BUDGET = 20
 /** A frame longer than this is a pause (hidden tab, a stall), not a measure of the device. */
 const GAP = 1000
@@ -147,7 +153,10 @@ export const perfStats = {
 const win: number[] = []
 let winTime = 0
 const floors: number[] = []
-/** Set once the level fell all the way to `low`: post-processing goes too. */
+/**
+ * Set once a badly slow machine fell all the way to `low`: post-processing goes too. That
+ * recompiles every shader, a long freeze on Windows, so only real need justifies it.
+ */
 let postDropped = false
 let slow = 0
 let fine = 0
@@ -169,7 +178,7 @@ const percentile = (a: number[], p: number) => {
   return s[Math.min(s.length - 1, Math.floor(p * s.length))]
 }
 
-function step(dir: -1 | 1, why: string) {
+function step(dir: -1 | 1, why: string, severe = false) {
   const cur = quality.get()
   const i = ORDER.indexOf(cur) + dir
   // Already at the bottom on a phone: lower the resolution instead.
@@ -187,7 +196,7 @@ function step(dir: -1 | 1, why: string) {
   const next = ORDER[i]
   perfStats.changes.push({ at: Math.round(performance.now()), from: cur, to: next, why })
   if (perfStats.changes.length > 12) perfStats.changes.shift()
-  if (dir < 0 && next === 'low') postDropped = true
+  if (dir < 0 && next === 'low' && severe) postDropped = true
   quality.set(next)
   if (dir < 0) downs++
   slow = 0
@@ -206,12 +215,12 @@ export function sampleFrame(ms: number) {
   perfStats.count = Math.min(perfStats.count + 1, perfStats.frames.length)
   win.push(ms)
   winTime += ms
-  if (win.length < WINDOW && (winTime < WINDOW_MS || win.length < 6)) return
+  if (winTime < WINDOW_MS || win.length < MIN_FRAMES) return
 
   // The display's own cadence: the fast end of recent windows (120 or 60 Hz), capped.
   floors.push(percentile(win, 0.1))
   if (floors.length > 10) floors.shift()
-  const budget = Math.min(MAX_BUDGET, Math.max(6, Math.min(...floors)))
+  const budget = Math.min(MAX_BUDGET, Math.max(MIN_BUDGET, Math.min(...floors)))
   perfStats.budget = budget
   const p90 = percentile(win, 0.9)
   perfStats.lastP90 = p90
@@ -224,10 +233,11 @@ export function sampleFrame(ms: number) {
     return
   }
   if (p90 > budget * BAD) {
-    // "badly slow" is judged against 60 fps, so a fast 120 Hz screen's hitches never count double
-    slow += p90 > Math.max(budget, 1000 / 60) * SEVERE ? 2 : 1
+    // "badly slow" is judged against 60 fps, so a fast screen's hitches never count double
+    const severe = p90 > Math.max(budget, 1000 / 60) * SEVERE
+    slow += severe ? 2 : 1
     fine = 0
-    if (slow >= DOWN_AFTER) step(-1, `p90 ${p90.toFixed(1)} ms over ${(budget * BAD).toFixed(1)} ms`)
+    if (slow >= DOWN_AFTER) step(-1, `p90 ${p90.toFixed(1)} ms over ${(budget * BAD).toFixed(1)} ms`, severe)
   } else if (p90 <= budget * GOOD) {
     fine++
     slow = 0
