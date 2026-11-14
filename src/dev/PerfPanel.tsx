@@ -4,11 +4,22 @@ import { ceiling, levelConfig, perfStats, quality, type Level } from '../lib/qua
 import { motion } from '../lib/motion'
 
 /**
- * Development only: live performance numbers. Toggle with Shift+P, or open
- * the page with ?perf. Updates twice a second by writing text directly, so
- * it costs the page nothing measurable and never re-renders React.
+ * Live performance numbers: in development (toggle with Shift+P), or on the live site
+ * with ?perf, to diagnose a visitor's machine from a screenshot. Updates twice a second
+ * by writing text directly, so it costs the page nothing measurable and never re-renders React.
  */
 const LEVELS: Level[] = ['low', 'medium', 'high', 'ultra']
+
+/** The page's errors since load (the panel is only loaded with ?perf or in development). */
+const errors: string[] = []
+const keep = (msg: string) => {
+  errors.push(`${(performance.now() / 1000).toFixed(0)}s ${msg.slice(0, 140)}`)
+  if (errors.length > 4) errors.shift()
+}
+if (typeof window !== 'undefined') {
+  window.addEventListener('error', (e) => keep(e.message || String(e.error)))
+  window.addEventListener('unhandledrejection', (e) => keep('promise: ' + String(e.reason)))
+}
 
 export default function PerfPanel() {
   const [open, setOpen] = useState(() => new URLSearchParams(location.search).has('perf'))
@@ -44,6 +55,7 @@ export default function PerfPanel() {
         `frame    avg ${avg.toFixed(1)}  p95 ${q(0.95).toFixed(1)}  p99 ${q(0.99).toFixed(1)}  sd ${sd.toFixed(1)}`,
         `long     >25ms ${list.filter((x) => x > 25).length}   >50ms ${list.filter((x) => x > 50).length}   (last ${n})`,
         `quality  ${level} (start ${ceiling})   mode ${motion.renderMode}`,
+        `scene    last frame ${perfStats.lastFrameAt ? ((performance.now() - perfStats.lastFrameAt) / 1000).toFixed(1) + 's ago' : 'never'}`,
         gl
           ? `canvas   ${gl.domElement.width}×${gl.domElement.height} @ ${gl.getPixelRatio().toFixed(2)}x`
           : 'canvas   (no WebGL)',
@@ -52,6 +64,7 @@ export default function PerfPanel() {
         `effects  post ${cfg.post ? 'on' : 'off'}  reflect ${cfg.reflect ? 'on' : 'off'}  dust ${cfg.dust}  shards ${cfg.shards}`,
         mem ? `js heap  ${(mem.usedJSHeapSize / 1048576).toFixed(0)} MB` : '',
         ...perfStats.changes.slice(-3).map((c) => `change   ${(c.at / 1000).toFixed(0)}s ${c.from}→${c.to}: ${c.why}`),
+        ...errors.map((e) => `error    ${e}`),
       ]
       if (out.current) out.current.textContent = lines.filter(Boolean).join('\n')
     }, 500)

@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { armQualityMonitor, ceiling, levelConfig, perfStats, phoneDpr, prefersReducedMotion, quality, sampleFrame, tier } from '../lib/quality'
+import { armQualityMonitor, ceiling, levelConfig, perfRequested, perfStats, phoneDpr, prefersReducedMotion, quality, sampleFrame, tier } from '../lib/quality'
 import { motion } from '../lib/motion'
 import { useStore } from '../hooks/useStore'
 import { complete } from '../lib/loader'
@@ -116,6 +116,7 @@ function FrameStats() {
     if (import.meta.env.DEV) gl.info.autoReset = false
   }, [gl])
   useFrame((_, dt) => {
+    perfStats.lastFrameAt = performance.now()
     if (import.meta.env.DEV) gl.info.reset()
     // only real, continuous rendering says anything about the device
     if (motion.renderMode === 'always') sampleFrame(dt * 1000)
@@ -138,8 +139,8 @@ export default function Scene() {
       gl={{ antialias: tier !== 'low', powerPreference: 'high-performance', alpha: false, stencil: false }}
       camera={{ fov: 40, near: 0.1, far: 1600, position: [0, 3.2, 40] }}
       onCreated={({ gl, scene }) => {
-        // Development only: the renderer, for the perf harness and panel.
-        if (import.meta.env.DEV) Object.assign(window, { __aphelion: { gl, scene, quality, perfStats } })
+        // The renderer, for the perf harness and panel (development, or ?perf on the live site).
+        if (import.meta.env.DEV || perfRequested) Object.assign(window, { __aphelion: { gl, scene, quality, perfStats } })
         gl.setClearColor('#080707')
         gl.toneMapping = THREE.ACESFilmicToneMapping
         gl.toneMappingExposure = 0.95

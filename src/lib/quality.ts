@@ -148,7 +148,11 @@ export const perfStats = {
   budget: 16.7,
   lastP90: 0,
   changes: [] as { at: number; from: Level; to: Level; why: string }[],
+  /** When the 3D last drew a frame (performance.now), whatever the render mode. */
+  lastFrameAt: 0,
 }
+/** Diagnostics on the live site: `?perf` shows the performance panel. */
+export const perfRequested = typeof location !== 'undefined' && new URLSearchParams(location.search).has('perf')
 
 const win: number[] = []
 let winTime = 0

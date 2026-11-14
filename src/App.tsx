@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { ScrollTrigger } from './lib/gsap'
 import { initScroll, destroyScroll } from './lib/scroll'
-import { hasWebGL } from './lib/quality'
+import { hasWebGL, perfRequested } from './lib/quality'
 import { activeChapter, CHAPTERS, motion } from './lib/motion'
 import { complete } from './lib/loader'
 import { Preloader } from './components/Preloader'
@@ -17,7 +17,8 @@ import { Skills } from './sections/Skills'
 import { Contact } from './sections/Contact'
 
 // Development only (Shift+P or ?perf); compiled out of production builds.
-const PerfPanel = import.meta.env.DEV ? lazy(() => import('./dev/PerfPanel')) : null
+// Development, or ?perf on the live site (loaded only then)
+const PerfPanel = import.meta.env.DEV || perfRequested ? lazy(() => import('./dev/PerfPanel')) : null
 
 // Three.js and everything 3D arrive in their own chunk, behind the preloader.
 const Scene = lazy(() =>
