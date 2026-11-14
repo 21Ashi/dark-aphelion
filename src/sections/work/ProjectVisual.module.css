@@ -1,0 +1,522 @@
+.frame {
+  /* tints of the project's colours (set inline from its theme) */
+  --pv-a08: color-mix(in srgb, var(--pv-accent) 8%, transparent);
+  --pv-a10: color-mix(in srgb, var(--pv-accent) 10%, transparent);
+  --pv-a12: color-mix(in srgb, var(--pv-accent) 12%, transparent);
+  --pv-a14: color-mix(in srgb, var(--pv-accent) 14%, transparent);
+  --pv-a35: color-mix(in srgb, var(--pv-accent) 35%, transparent);
+  --pv-d35: color-mix(in srgb, var(--pv-deep) 35%, transparent);
+  --pv-d40: color-mix(in srgb, var(--pv-deep) 40%, transparent);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--pv-bg);
+  isolation: isolate;
+}
+
+.svg,
+.media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(var(--zoom, 1.06));
+  transition: transform 1.2s var(--ease-out);
+}
+
+.corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--white);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.7;
+  z-index: 2;
+}
+.corner[data-c='tl'] {
+  left: 12px;
+  top: 12px;
+  border-left-width: 1px;
+  border-top-width: 1px;
+}
+.corner[data-c='tr'] {
+  right: 12px;
+  top: 12px;
+  border-right-width: 1px;
+  border-top-width: 1px;
+}
+.corner[data-c='bl'] {
+  left: 12px;
+  bottom: 12px;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+}
+.corner[data-c='br'] {
+  right: 12px;
+  bottom: 12px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.fig {
+  position: absolute;
+  left: 34px;
+  right: 34px;
+  top: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+/* A single crimson scanline that sweeps on hover / when large. */
+.scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30%;
+  z-index: 1;
+  background: linear-gradient(to bottom, transparent, var(--pv-a14) 85%, color-mix(in srgb, var(--pv-accent) 50%, transparent) 100%);
+  transform: translateY(-110%);
+  pointer-events: none;
+}
+
+.svgMono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  fill: #f5f0ed;
+}
+.svgSans {
+  font-family: var(--font-display);
+  font-size: 17px;
+  fill: #f5f0ed;
+}
+.glyph {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 420px;
+  fill: #f5f0ed;
+}
+.display,
+.displaySm,
+.displayXs {
+  font-family: var(--font-display);
+  font-variation-settings:
+    'wdth' 62,
+    'wght' 800;
+  text-transform: uppercase;
+  fill: #f5f0ed;
+}
+.display,
+.displayOutline {
+  font-size: 150px;
+  letter-spacing: -1px;
+}
+.displayOutline {
+  font-family: var(--font-display);
+  font-variation-settings:
+    'wdth' 62,
+    'wght' 800;
+  fill: none;
+  stroke: #f5f0ed;
+  stroke-width: 1.5;
+}
+.displaySm {
+  font-size: 64px;
+}
+.displayXs {
+  font-size: 34px;
+  letter-spacing: 1px;
+}
+.serifText {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 30px;
+  fill: rgba(245, 240, 237, 0.7);
+}
+
+/* ── Animations (paused until on screen) ── */
+.frame * {
+  animation-play-state: paused;
+}
+.frame[data-playing='true'] * {
+  animation-play-state: running;
+}
+
+.sweep {
+  transform-origin: 400px 280px;
+  animation: spin 4s linear infinite;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.blip {
+  animation: blip 4s linear infinite;
+}
+@keyframes blip {
+  0% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 0.15;
+  }
+}
+
+.routeLine {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 6s var(--ease-in-out) infinite;
+}
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  80%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+.pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 1.6s var(--ease-out) infinite;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.detect {
+  opacity: 0;
+  animation: detect 2.7s steps(1) infinite;
+}
+@keyframes detect {
+  0% {
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  12% {
+    opacity: 0.2;
+  }
+  16%,
+  100% {
+    opacity: 1;
+  }
+}
+.scanLine {
+  animation: scanY 3.4s var(--ease-in-out) infinite alternate;
+}
+@keyframes scanY {
+  from {
+    transform: translateY(70px);
+  }
+  to {
+    transform: translateY(490px);
+  }
+}
+
+.queue {
+  animation: queue 14s linear infinite;
+}
+@keyframes queue {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-420px);
+  }
+}
+
+.chip {
+  animation: chip 2.4s var(--ease-in-out) infinite alternate;
+}
+@keyframes chip {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+.cross {
+  animation: blinkX 1.2s steps(2) infinite;
+}
+@keyframes blinkX {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Hajj: the offline / synced chip trades places */
+.swapA,
+.swapB {
+  animation: swap 6s steps(1) infinite;
+}
+.swapB {
+  animation-name: swapB;
+}
+@keyframes swap {
+  0% {
+    opacity: 1;
+  }
+  60%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes swapB {
+  0% {
+    opacity: 0;
+  }
+  60%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Mzad: the lot's clock runs down; the bid feed rolls in from the top */
+.deplete {
+  stroke-dasharray: 1;
+  animation: deplete 12s linear infinite;
+}
+@keyframes deplete {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 1;
+  }
+}
+.feed {
+  animation: feed 14s linear infinite;
+}
+@keyframes feed {
+  from {
+    transform: translateY(-392px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Es7a: breathing ring, audio bars, stars, the sun coming up */
+.breathe {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 5s var(--ease-in-out) infinite alternate;
+}
+@keyframes breathe {
+  from {
+    transform: scale(0.92);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+.eq {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: eq 1.6s var(--ease-in-out) infinite alternate;
+}
+@keyframes eq {
+  from {
+    transform: scaleY(0.35);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+.twinkle {
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+.rise {
+  animation: rise 9s var(--ease-in-out) infinite alternate;
+}
+@keyframes rise {
+  from {
+    transform: translateY(40px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.blinkSoft {
+  animation: blinkSoft 2.4s ease-in-out infinite alternate;
+}
+@keyframes blinkSoft {
+  to {
+    opacity: 0.45;
+  }
+}
+
+/* Jola: the selection moves across the games on the TV */
+.tileOn {
+  opacity: 0;
+  animation: tileOn 7s var(--ease-out) infinite;
+}
+@keyframes tileOn {
+  0% {
+    opacity: 0;
+  }
+  4%,
+  16% {
+    opacity: 1;
+  }
+  22%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Items that arrive one by one, then clear together (see SeqKeyframes) */
+.seq {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-duration: var(--dur, 6s);
+  animation-iteration-count: infinite;
+  animation-timing-function: var(--ease-out);
+}
+
+/* Qatar Gates: the VIP banner slider */
+.slide {
+  animation: slide 16s linear infinite;
+}
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-1360px);
+  }
+}
+
+/* Mudaraj: a wave through the stands */
+.wave {
+  animation: wave 2.6s var(--ease-in-out) infinite;
+}
+@keyframes wave {
+  0%,
+  55%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-9px);
+  }
+}
+
+/* Khabatha: the truth is stamped once the votes are in */
+.stamp {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: stamp 7s var(--ease-out) infinite;
+}
+@keyframes stamp {
+  0%,
+  44% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  86% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  91%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+.reveal {
+  animation: reveal 7s steps(1) infinite;
+}
+@keyframes reveal {
+  0% {
+    opacity: 0;
+  }
+  48% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0;
+  }
+}
+
+/* Hover / large: push in, sweep the scanline */
+.large,
+:global([data-hover='true']) .frame {
+  --zoom: 1;
+}
+.large .fig,
+.large .topLabel {
+  /* the case study's crumb sits there */
+  display: none;
+}
+@media (max-width: 899px) {
+  .topLabel {
+    /* the FIG caption sits there on small frames */
+    display: none;
+  }
+}
+:global([data-hover='true']) .scan,
+.large .scan {
+  animation: sweepDown 1.4s var(--ease-in-out) forwards;
+}
+@keyframes sweepDown {
+  to {
+    transform: translateY(380%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame *,
+  .frame[data-playing='true'] * {
+    animation: none !important;
+  }
+  .detect {
+    opacity: 1;
+  }
+  .routeLine {
+    stroke-dashoffset: 0;
+  }
+}

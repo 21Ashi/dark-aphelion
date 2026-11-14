@@ -1,0 +1,171 @@
+:root {
+  --black: #080707;
+  --charcoal: #151111;
+  --charcoal-2: #1d1717;
+  --crimson: #8b1a1a;
+  --red: #e63946;
+  --white: #f5f0ed;
+  --gray: #888080;
+  --line: rgba(245, 240, 237, 0.12);
+  --line-strong: rgba(245, 240, 237, 0.28);
+
+  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  --gutter: clamp(16px, 3.2vw, 56px);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 100;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: clip;
+  min-height: 100vh;
+}
+
+/* While the preloader runs nothing scrolls. */
+html.is-loading,
+html.is-loading body {
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+img,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--red);
+  color: var(--black);
+}
+
+:focus-visible {
+  outline: 1px solid var(--red);
+  outline-offset: 4px;
+}
+
+/* Custom cursor: hide the native one only for precise pointers. */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Shared type primitives */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.eyebrow::before {
+  content: '';
+  width: 36px;
+  height: 1px;
+  background: var(--red);
+}
+
+/* SplitText helpers */
+.split-line {
+  padding-bottom: 0.04em;
+}
+.split-mask {
+  overflow: clip;
+}
+
+/* Section scaffolding */
+.chapter {
+  position: relative;
+  z-index: 1;
+}
+
+/* No WebGL: a painted stand-in for the star. */
+.fallback-sky {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 52%, #0c0606 0 17vh, #e63946 17.5vh, rgba(139, 26, 26, 0.5) 24vh, transparent 46vh),
+    linear-gradient(to bottom, #080707 0 52%, #0b0707 52%);
+}

@@ -1,0 +1,277 @@
+/*
+ * Trajectory: a tall section with one sticky stage, open to the scene behind.
+ */
+.exp {
+  position: relative;
+  height: calc((var(--pin) + 1) * 100vh);
+  height: calc((var(--pin) + 1) * 100svh);
+  --soft-red: #ff7a72;
+}
+
+/*
+ * A light dim so type holds over the star. It starts as dark as the coda
+ * above it ends and finishes where the next chapter's shade begins, so
+ * neither boundary shows as an edge.
+ */
+.exp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(8, 7, 7, 0.78) 0, rgba(8, 7, 7, 0.38) 75vh, rgba(8, 7, 7, 0.4) 100%);
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.mask {
+  display: inline-block;
+  vertical-align: top;
+  padding-bottom: 0.2em;
+}
+.mask > span {
+  display: inline-block;
+}
+
+.index {
+  position: absolute;
+  left: var(--gutter);
+  top: calc(72px + 4vh);
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-shadow: 0 0 12px rgba(8, 7, 7, 0.9);
+}
+.index b {
+  font-weight: 400;
+  color: var(--soft-red);
+  margin-right: 0.5em;
+}
+
+.jobs {
+  list-style: none;
+  position: absolute;
+  inset: 0;
+}
+.job {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 0 var(--gutter) clamp(84px, 13.5vh, 132px);
+}
+
+/* ── The year: hollow, enormous, the scene showing through it ── */
+.year {
+  display: flex;
+  white-space: nowrap;
+  /* The name below steps up over the foot of the numerals. */
+  margin-bottom: -0.19em;
+  font-size: min(34vw, 55vh);
+  line-height: 0.78;
+  font-variation-settings:
+    'wdth' 62,
+    'wght' 820;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(245, 240, 237, 0.7);
+  will-change: transform;
+}
+.slot {
+  display: inline-block;
+  padding: 0.02em 0.01em 0.05em;
+}
+.slot > span {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ── The role: when, where, what ── */
+.body {
+  position: relative;
+  width: 100%;
+}
+/* The role and its dates at reading size; the stack a step quieter. */
+.meta {
+  font-size: clamp(20px, 2.1vw, 32px);
+  line-height: 1.2;
+  font-variation-settings:
+    'wdth' 92,
+    'wght' 620;
+  color: var(--white);
+  text-shadow: 0 0 18px rgba(8, 7, 7, 0.9);
+}
+.foot {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-shadow: 0 0 14px rgba(8, 7, 7, 0.9);
+}
+.role {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 18px;
+}
+.period {
+  color: var(--soft-red);
+  font-variation-settings:
+    'wdth' 92,
+    'wght' 420;
+}
+.company {
+  font-weight: inherit;
+  font-size: min(21vw, 30vh);
+  line-height: 0.8;
+  font-variation-settings:
+    'wdth' 62,
+    'wght' 820;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 28px;
+  margin-top: clamp(14px, 2.8vh, 30px);
+}
+.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: clamp(15px, 1.15vw, 18px);
+  font-variation-settings:
+    'wdth' 96,
+    'wght' 400;
+  color: #d2cbc8;
+}
+.tags b {
+  font-weight: 400;
+  margin-left: 14px;
+  color: var(--soft-red);
+}
+
+/* ── Where you are: a rolling counter and one thin line ── */
+.foot {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(22px, 5vh, 48px);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 11px;
+}
+.counter {
+  flex: none;
+}
+.roll {
+  display: inline-block;
+  height: 1.4em;
+  overflow: hidden;
+  vertical-align: top;
+  color: var(--soft-red);
+}
+.rollStrip {
+  display: flex;
+  flex-direction: column;
+}
+.rollStrip > span {
+  height: 1.4em;
+}
+.of {
+  margin-left: 0.6em;
+}
+.track {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+}
+.bar {
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  transform-origin: left;
+}
+.track i {
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: 7px;
+  background: var(--white);
+}
+
+/* ── Phones and upright tablets ── */
+@media (max-width: 640px), (orientation: portrait) and (max-width: 1024px) {
+  .index {
+    top: calc(64px + 3vh);
+  }
+  .job {
+    padding-bottom: 78px;
+  }
+  .year {
+    font-size: min(50vw, 30vh);
+    margin-bottom: 0.04em;
+  }
+  .company {
+    white-space: normal;
+    font-size: min(25vw, 15vh);
+    line-height: 0.84;
+  }
+  .meta {
+    flex-direction: column;
+    font-size: clamp(19px, 5.6vw, 26px);
+  }
+  .tags {
+    font-size: 15px;
+  }
+  .tags {
+    gap: 2px 16px;
+  }
+}
+
+/* ── Reduced motion: no pin, no scrub. Each role stands as its own still. ── */
+@media (prefers-reduced-motion: reduce) {
+  .exp {
+    height: auto;
+  }
+  .stage {
+    position: relative;
+    height: auto;
+    overflow: clip;
+    padding-top: 16vh;
+  }
+  .jobs,
+  .job {
+    position: static;
+  }
+  .job {
+    justify-content: center;
+    min-height: 88vh;
+    min-height: 88svh;
+    padding-bottom: 0;
+  }
+  .foot {
+    display: none;
+  }
+}

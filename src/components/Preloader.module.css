@@ -1,0 +1,143 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: all;
+  color: var(--white);
+}
+
+.lid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: var(--black);
+  will-change: transform;
+}
+.lid[data-lid='top'] {
+  top: 0;
+}
+.lid[data-lid='bottom'] {
+  bottom: 0;
+}
+
+.meta,
+.foot {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.meta {
+  top: calc(var(--gutter) * 0.8);
+}
+.foot {
+  bottom: calc(var(--gutter) * 0.8);
+}
+
+.mask,
+.countMask {
+  display: inline-block;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums; /* the count must not change width as it runs */
+}
+.mask > span {
+  display: inline-block;
+}
+
+.count {
+  display: inline-flex;
+  align-items: flex-start;
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 62, 'wght' 300;
+  font-size: clamp(64px, 12vw, 180px);
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+.count em {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  margin: 0.6em 0 0 0.6em;
+  color: var(--red);
+}
+
+.center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0;
+}
+
+.mark {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  width: 92px;
+  transform: translateX(-50%);
+  overflow: visible;
+}
+.mark path {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 3;
+  stroke-linejoin: miter;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.mark rect {
+  fill: var(--red);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+.wave {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(520px, 70vw);
+  height: 80px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wave span {
+  display: block;
+  width: 2px;
+  height: 100%;
+  background: var(--white);
+  opacity: 0.85;
+  transform: scaleY(0.02);
+  will-change: transform;
+}
+.wave span:nth-child(7n + 3) {
+  background: var(--red);
+}
+
+.horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--red) 20%, var(--white) 50%, var(--red) 80%, transparent);
+  transform: scaleX(0);
+  transform-origin: 50% 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave span {
+    transform: scaleY(0.3);
+  }
+}

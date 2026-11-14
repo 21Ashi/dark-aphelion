@@ -1,0 +1,25 @@
+.grain {
+  position: fixed;
+  inset: -100px;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: overlay;
+  animation: grain 0.9s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  17% { transform: translate(-37px, 21px); }
+  33% { transform: translate(24px, -48px); }
+  50% { transform: translate(-61px, -13px); }
+  67% { transform: translate(43px, 55px); }
+  83% { transform: translate(-12px, 70px); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+}

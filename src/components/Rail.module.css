@@ -1,0 +1,96 @@
+.rail {
+  position: fixed;
+  right: calc(var(--gutter) * 0.55);
+  top: 50%;
+  z-index: 50;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  transition:
+    opacity 0.5s,
+    visibility 0.5s;
+}
+/* The Works chapter has its own project counter on this edge. */
+.rail[data-away='true'] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.pct {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--gray);
+  writing-mode: vertical-rl;
+}
+
+.track {
+  position: relative;
+  width: 1px;
+  height: 34vh;
+  background: var(--line);
+}
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+.tick {
+  position: absolute;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  display: grid;
+  place-items: center;
+}
+.tick::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border: 1px solid var(--line-strong);
+  background: var(--black);
+  transform: rotate(45deg);
+  transition:
+    background 0.4s,
+    border-color 0.4s,
+    transform 0.6s var(--ease-out);
+}
+.tick[data-active='true']::before {
+  background: var(--red);
+  border-color: var(--red);
+  transform: rotate(45deg) scale(1.5);
+}
+
+.tickLabel {
+  position: absolute;
+  right: 22px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0;
+  transform: translateX(8px);
+  transition:
+    opacity 0.3s,
+    transform 0.5s var(--ease-out);
+  pointer-events: none;
+}
+.tick:hover .tickLabel,
+.tick:focus-visible .tickLabel {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 960px) {
+  .rail {
+    display: none;
+  }
+}

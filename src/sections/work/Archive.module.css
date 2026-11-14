@@ -1,0 +1,206 @@
+.archive {
+  position: relative;
+  padding: 18vh var(--gutter) 14vh;
+}
+.shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--black) 0%, rgba(8, 7, 7, 0.88) 18%, rgba(8, 7, 7, 0.88) 85%, var(--black) 100%);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 12px 40px;
+  margin-bottom: 8vh;
+}
+.index {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.index span {
+  color: var(--red);
+}
+.title {
+  font-weight: inherit;
+  font-size: clamp(64px, 10vw, 190px);
+  line-height: 0.82;
+  font-variation-settings:
+    'wdth' 62,
+    'wght' 820;
+  text-transform: uppercase;
+}
+.count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+  padding-bottom: 0.6em;
+}
+.count :global(.serif) {
+  font-size: 44px;
+  letter-spacing: 0;
+  color: var(--red);
+  margin-right: 8px;
+  text-transform: none;
+}
+
+.list {
+  list-style: none;
+  border-bottom: 1px solid var(--line);
+}
+.list > li {
+  position: relative;
+  overflow: hidden;
+}
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line-strong);
+  transform-origin: left;
+}
+
+.row {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 3.5em minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr) 7em 2em;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 0;
+  min-height: 56px;
+  text-align: left;
+  isolation: isolate;
+}
+.row::before {
+  /* crimson wash that wipes in from the left on hover */
+  content: '';
+  position: absolute;
+  inset: 0 calc(var(--gutter) * -1);
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--pv-deep) 55%, transparent), transparent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.7s var(--ease-out);
+}
+.row > span {
+  display: block;
+}
+.num,
+.year,
+.stack {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.num {
+  color: var(--pv-accent);
+}
+.name {
+  font-size: clamp(30px, 3.6vw, 64px);
+  line-height: 0.95;
+  font-variation-settings:
+    'wdth' 70,
+    'wght' 720;
+  text-transform: uppercase;
+  /* no transform transition here: GSAP animates this element */
+  transition: font-variation-settings 0.7s var(--ease-out);
+}
+.nameInner {
+  display: inline-block;
+  transition: transform 0.7s var(--ease-out);
+}
+.sub {
+  font-size: clamp(18px, 1.5vw, 24px);
+  color: rgba(245, 240, 237, 0.7);
+}
+.year {
+  text-align: right;
+}
+.arrow {
+  justify-self: end;
+  color: var(--pv-accent);
+  font-size: 20px;
+  transform: translateX(-12px);
+  opacity: 0;
+  transition:
+    transform 0.6s var(--ease-out),
+    opacity 0.4s;
+}
+
+.row[data-active='true']::before {
+  transform: scaleX(1);
+}
+.row[data-active='true'] .nameInner {
+  transform: translateX(12px);
+}
+.row[data-active='true'] .name {
+  color: var(--pv-accent);
+  font-variation-settings:
+    'wdth' 96,
+    'wght' 720;
+}
+.row[data-active='true'] .arrow {
+  transform: none;
+  opacity: 1;
+}
+
+.float {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 40;
+  width: min(30vw, 420px);
+  aspect-ratio: 4 / 3;
+  margin: calc(min(30vw, 420px) * -0.375) 0 0 32px;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 1100px) {
+  .row {
+    grid-template-columns: 3em minmax(0, 1fr) auto;
+  }
+  .sub,
+  .stack,
+  .arrow {
+    display: none !important;
+  }
+}
+@media (max-width: 640px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+  .row {
+    grid-template-columns: 2.4em minmax(0, 1fr);
+    gap: 12px;
+    padding: 18px 0;
+  }
+  .year {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+@media (hover: none) {
+  .float {
+    display: none;
+  }
+}

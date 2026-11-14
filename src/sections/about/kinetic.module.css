@@ -1,0 +1,14 @@
+/*
+ * A word keeps its letters together. No clipping mask: letters rise and fade
+ * in, so a scroll paused mid-move never shows them sliced at the top or bottom.
+ */
+.word {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0.14em 0.1em 0.12em;
+  margin: -0.14em -0.1em -0.12em;
+}
+.ch {
+  display: inline-block;
+  will-change: transform;
+}
