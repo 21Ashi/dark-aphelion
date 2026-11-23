@@ -85,10 +85,10 @@ export const WORLDS: WorldDef[] = [
         </div>
         <div className={s.visual} data-visual>
           <Depth d={0.6} className={s.optional} style={pos('71vw', '15vh', undefined, '64vh')}>
-            <Phone src="projects/mzad-al-fakher/p1.jpg" alt="Mzad Al Fakher home screen" tilt="rotateY(-26deg) rotateZ(4deg)" />
+            <Phone src="projects/mzad-al-fakher/p1.webp" alt="Mzad Al Fakher home screen" tilt="rotateY(-26deg) rotateZ(4deg)" />
           </Depth>
           <Depth d={1.2} className={s.hero} style={pos('49vw', '8vh', undefined, '84vh')}>
-            <Phone src="projects/mzad-al-fakher/p2.jpg" alt="Live auctions with countdowns" tilt="rotateY(-14deg) rotateX(4deg) rotateZ(-2deg)" />
+            <Phone src="projects/mzad-al-fakher/p2.webp" alt="Live auctions with countdowns" tilt="rotateY(-14deg) rotateX(4deg) rotateZ(-2deg)" />
           </Depth>
           <Depth d={2.4} className={`${s.chip} ${s.optional}`} style={pos('40vw', '24vh')}>
             <b>Live</b> Lot 07 · 06:33
@@ -129,7 +129,7 @@ export const WORLDS: WorldDef[] = [
                   className={i === 1 ? s.hero : s.optional}
                   style={pos(`${x}vw`, `${[22, 14, 14, 22][i]}vh`, undefined, '72vh')}
                 >
-                  <Phone src={`projects/jola/${f}.jpg`} alt={alt} tilt={`rotateZ(${rot}deg) rotateY(${-rot}deg)`} />
+                  <Phone src={`projects/jola/${f}.webp`} alt={alt} tilt={`rotateZ(${rot}deg) rotateY(${-rot}deg)`} />
                 </Depth>
               )
             })}
@@ -161,14 +161,14 @@ export const WORLDS: WorldDef[] = [
         <div className={s.visual} data-visual>
           <Depth d={1} className={s.hero} style={pos('30vw', '15vh', '58vw')}>
             <Browser
-              src="projects/qatar-gates/d1.jpg"
+              src="projects/qatar-gates/d1.webp"
               alt="Qatar Gates homepage with VIP banners and latest listings"
               url="caravangates.com"
               tilt="rotateY(-14deg) rotateX(5deg)"
             />
           </Depth>
           <Depth d={2.2} className={s.optional} style={pos('79vw', '34vh', undefined, '58vh')}>
-            <Phone src="projects/qatar-gates/m1.jpg" alt="The homepage on a phone" tilt="rotateY(-10deg) rotateZ(3deg)" />
+            <Phone src="projects/qatar-gates/m1.webp" alt="The homepage on a phone" tilt="rotateY(-10deg) rotateZ(3deg)" />
           </Depth>
           <Depth d={3} className={`${s.chip} ${s.optional}`} style={pos('24vw', '68vh')}>
             <b>VIP</b> Caravan · 85,000 QAR
