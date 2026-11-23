@@ -308,8 +308,7 @@ export function Hero() {
 
       <div className={s.lower} data-depth="6">
         <p className={s.tagline} data-tagline>
-          I build digital experiences where <em className="serif">engineering</em> meets{' '}
-          <em className="serif">imagination.</em>
+          I build Flutter apps <em className="serif">and the servers behind them.</em>
         </p>
         <div className={s.ctas}>
           <span data-cta>
@@ -369,7 +368,7 @@ export function Hero() {
         <div data-meta className={`${s.metaBlock} ${s.metaRight}`}>
           <span className={s.metaKey}>Local time</span>
           <LocalTime />
-          <span className={s.metaDim}>Full-stack · Creative</span>
+          <span className={s.metaDim}>Full-stack · Flutter</span>
         </div>
       </div>
     </section>

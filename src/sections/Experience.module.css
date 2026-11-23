@@ -185,18 +185,16 @@
   flex: none;
 }
 .roll {
-  display: inline-block;
-  height: 1.4em;
-  overflow: hidden;
+  display: inline-grid;
   vertical-align: top;
   color: var(--soft-red);
 }
-.rollStrip {
-  display: flex;
-  flex-direction: column;
+/* Every number in the same cell; they crossfade. Only the first shows without motion. */
+.roll > span {
+  grid-area: 1 / 1;
 }
-.rollStrip > span {
-  height: 1.4em;
+.roll > span + span {
+  opacity: 0;
 }
 .of {
   margin-left: 0.6em;

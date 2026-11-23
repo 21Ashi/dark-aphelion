@@ -6,7 +6,7 @@ import { Chars, travel, useFit, velocitySkew } from './about/kinetic'
 import s from './About.module.css'
 
 /** The one supporting line, cut from `about.intro` in content/profile.ts. */
-const SUPPORT = 'From an empty repository to the store.'
+const SUPPORT = 'Flutter in front, Node.js and .NET behind it.'
 
 const STATEMENT_TEXT = `${about.kicker} ${about.headline}`.toLowerCase().replace(/^./, (c) => c.toUpperCase())
 
@@ -57,23 +57,17 @@ function paint(glyphs: HTMLElement[], stat: (typeof STATS)[number], p: number) {
 
 // ── The sequence, in viewport-heights of scroll ──────────────────────────
 const PRE = 0.75 // the statement assembles while the stage rises into place
-const STATEMENT = 0.8
-const STAT = 0.95 // one number
-const CROSS = 1.35 // the principles pass through
+const STATEMENT = 0.7
+const STAT = 0.75 // one number
 const POST = 1 // the stage scrolls away
-const PIN = STATEMENT + STAT * STATS.length + CROSS
-
-/** Fast in, slow through the middle, fast out: a pass, not a stop. */
-const pass = (p: number) => {
-  const u = 2 * p - 1
-  return 0.5 + 0.5 * (0.16 * u + 0.84 * u * u * u)
-}
+const PIN = STATEMENT + STAT * STATS.length
 
 /**
- * Origin. One pinned stage, one idea on screen at a time, all of it scrubbed:
- * a statement in masked type, each number counting up on its own, then the
- * three principles crossing at different depths. Nothing here is a paragraph;
- * the scene behind stays in view throughout.
+ * Origin. One pinned stage, one idea on screen at a time: a statement, then
+ * each number in turn. The glyphs are scrubbed with the scroll; the count is
+ * not. It rolls on a clock once the number arrives, so a paused scroll only
+ * ever shows the true figure. Nothing here is a paragraph; the scene behind
+ * stays in view throughout.
  */
 export function About() {
   const root = useRef<HTMLElement>(null)
@@ -87,6 +81,7 @@ export function About() {
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         const lean = velocitySkew(q('[data-lean]'), 'skewX', 9)
+        const rolls: gsap.core.Tween[] = []
         const tilt = velocitySkew(q('[data-tilt]'), 'skewY', 4)
 
         const tl = gsap.timeline({
@@ -130,8 +125,9 @@ export function About() {
           .to(q('[data-support]'), { yPercent: -60, opacity: 0, duration: 0.18, ease: 'power2.in' }, out)
           .to(q('[data-support-rule]'), { scaleX: 0, duration: 0.18, ease: 'power2.in' }, out + 0.04)
 
-        // 2 · The numbers, one at a time: glyphs rise and fade in while the value
-        // counts, drift across with a slow push in, and rise on out.
+        // 2 · The numbers, one at a time: glyphs rise and fade in, the value rolls
+        // up on its own clock (scrolling forward only), the figure drifts across
+        // with a slow push in, and it rises on out.
         const restore: (() => void)[] = []
         ;(q('[data-stat]') as HTMLElement[]).forEach((li, i) => {
           const stat = STATS[i]
@@ -144,15 +140,22 @@ export function About() {
           const dir = i % 2 ? -1 : 1
           const count = { p: 0 }
 
-          paint(glyphs, stat, 0)
+          // Ranges ("40–50") are shown whole; a single figure rolls up from zero.
+          const rolls_ = stat.totals.length === 1
+          paint(glyphs, stat, 1)
           restore.push(() => paint(glyphs, stat, 1))
+          const roll = () => {
+            if (!rolls_ || tl.scrollTrigger?.direction !== 1) return
+            count.p = 0
+            paint(glyphs, stat, 0)
+            rolls.push(gsap.to(count, { p: 1, duration: 1.1, ease: 'power3.out', onUpdate: () => paint(glyphs, stat, count.p) }))
+          }
           gsap.set(moving, { yPercent: 40, opacity: 0 })
           gsap.set(caps, { yPercent: 50, opacity: 0 })
           gsap.set(rule, { xPercent: -101 })
 
-          // Hollow zeros arrive first; the count then fills them in.
           tl.to(moving, { yPercent: 0, opacity: 1, duration: 0.26, ease: 'power3.out', stagger: { amount: 0.1, from: 'end' } }, at)
-            .to(count, { p: 1, duration: 0.28, ease: 'power1.inOut', onUpdate: () => paint(glyphs, stat, count.p) }, at + 0.1)
+            .call(roll, undefined, at + 0.02)
             .fromTo(
               li.querySelector('[data-figure]'),
               { x: travel(dir * 6, dir * 3), scale: 0.95 },
@@ -166,30 +169,12 @@ export function About() {
             .to(rule, { xPercent: 101, duration: 0.2, ease: 'power2.in' }, leave)
         })
 
-        // 3 · The principles: each title crosses the stage on its own line,
-        // alternate lines from opposite sides. The word at the back runs a
-        // beat behind the one in front, so the pair stretches when it moves
-        // fast and closes up as it slows.
-        const cross = PRE + STATEMENT + STATS.length * STAT - 0.15
-        ;(q('[data-principle]') as HTMLElement[]).forEach((row, i) => {
-          const dir = i % 2 ? -1 : 1
-          const words = [row.querySelector('[data-noun]'), row.querySelector('[data-adv]')].filter(Boolean)
-          if (dir < 0) words.reverse()
-          words.forEach((word, n) =>
-            tl.fromTo(
-              word,
-              { x: () => dir * window.innerWidth * 1.05 },
-              { x: () => -dir * window.innerWidth * 1.05, duration: CROSS + 0.35, ease: pass },
-              cross + i * 0.13 + n * 0.05,
-            ),
-          )
-        })
-
         tl.set({}, {}, PRE + PIN + POST)
 
         return () => {
           lean.kill()
           tilt.kill()
+          rolls.forEach((t) => t.kill())
           restore.forEach((fn) => fn())
         }
       })
@@ -271,29 +256,6 @@ export function About() {
           ))}
         </ul>
 
-        {/* 3 · Principles, titles only */}
-        <ul className={`${s.beat} ${s.principles}`} data-lean>
-          {about.principles.map((p) => {
-            const cut = p.title.lastIndexOf(' ')
-            return (
-              <li key={p.title} className={s.principle} data-principle>
-                <h3 className={s.pTitle}>
-                  <span className={s.noun} data-noun>
-                    {cut > 0 ? p.title.slice(0, cut) : p.title}
-                  </span>
-                  {cut > 0 && (
-                    <>
-                      {' '}
-                      <span className={`serif ${s.adv}`} data-adv>
-                        {p.title.slice(cut + 1)}
-                      </span>
-                    </>
-                  )}
-                </h3>
-              </li>
-            )
-          })}
-        </ul>
       </div>
     </section>
   )

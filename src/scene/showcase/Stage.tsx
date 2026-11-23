@@ -616,7 +616,9 @@ export default function Stage() {
     const N = projects.length
     const near = Math.round(THREE.MathUtils.clamp(w.pos, 0, N - 1))
     const off = w.pos - near
-    const a = smooth(clamp01(Math.abs(off) * 2.2))
+    // The phone holds its place for most of the step and changes over quickly, so
+    // the pedestal is never left standing empty for long.
+    const a = smooth(clamp01((Math.abs(off) - 0.14) / 0.34))
     const dir = off < 0 ? -1 : 1
     if (near !== s.shown) {
       s.shown = near

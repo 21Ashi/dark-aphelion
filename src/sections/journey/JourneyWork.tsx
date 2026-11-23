@@ -6,7 +6,6 @@ import { isTouch, prefersReducedMotion } from '../../lib/quality'
 import { scrollToTarget } from '../../lib/scroll'
 import { CaseStudy } from '../work/CaseStudy'
 import { Archive } from '../work/Archive'
-import { Coda } from '../work/Coda'
 import { WORLDS, type Transition, type WorldDef } from './worlds'
 import { Particles } from './particles'
 import { Magnetic } from '../../components/Magnetic'
@@ -362,9 +361,8 @@ export function JourneyWork() {
                 <small>/ {projects.length}</small>
               </p>
               <p className={s.introCopy}>
-                {STOPS.length} of {projects.length} products, from enterprise platforms to party games, each built for real
-                people. Each one is its own world; open any of them for the full story. The other{' '}
-                {projects.length - STOPS.length} are in the index that follows.
+                {STOPS.length} of {projects.length} products, from a Hajj platform to party games. Open any of them for the
+                full story; the index that follows lists all {projects.length}.
               </p>
             </div>
           </div>
@@ -434,7 +432,6 @@ export function JourneyWork() {
           )}
       </section>
       <Archive onOpen={open} />
-      <Coda />
     </>
   )
 }

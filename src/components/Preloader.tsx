@@ -153,7 +153,7 @@ export function Preloader() {
 
       <div className={s.foot}>
         <span className={s.mask}>
-          <span data-meta>Calibrating the experience</span>
+          <span data-meta>Loading the 3D scene</span>
         </span>
         <span className={s.countMask}>
           <span className={s.count} data-count>

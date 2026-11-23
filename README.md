@@ -1,7 +1,8 @@
 # Aphelion — Abood Ashi's portfolio
 
 A scroll-driven WebGL experience: a crimson star rising behind a colonnade, a
-morphing sculpture, and six chapters the camera flies through as you scroll.
+morphing sculpture, and five chapters the camera flies through as you scroll
+(about 16 screens of scroll: Arrival, Origin, Works, Trajectory, Aphelion).
 
 React 19 · Vite · TypeScript · Three.js / React Three Fiber · GSAP (ScrollTrigger,
 SplitText, ScrambleText) · Lenis · custom GLSL.
@@ -22,7 +23,6 @@ Everything personal is in `src/content/` — no component needs touching:
 | `profile.ts` | name, tagline, location, email, socials, About copy, principles, stats |
 | `projects.ts` | the Works chapter and case studies |
 | `experience.ts` | the Trajectory timeline |
-| `skills.ts` | the constellation categories |
 
 **The Works stage** shows one project at a time as the chapter's scroll moves on
 (`src/sections/Work.tsx` drives it; the type column is `src/sections/work/Slide.tsx`).
@@ -67,7 +67,7 @@ src/
 ├── content/        editable copy
 ├── lib/            motion store, GSAP setup, Lenis, loader, device tiers
 ├── components/     preloader, cursor, magnetic, nav, chapter rail, grain
-├── sections/       Hero, About, Work (+ case study), Experience, Skills, Contact
+├── sections/       Hero, About, Work (+ case study), Experience, Contact
 └── scene/          the 3D world (lazy-loaded chunk)
     ├── shaders/    GLSL: star, corona, sky, sculpture, dust, grid, smoke, shafts
     ├── path.ts     camera keyframes per chapter
@@ -118,3 +118,11 @@ src/
 
 `vite.config.ts` sets `base: '/dark-aphelion/'` for GitHub Pages, which serves
 the `gh-pages` branch. Publish the contents of `dist/` there after `npm run build`.
+
+## Pacing
+
+Each pinned chapter's length is a set of constants in viewport heights, and every
+timing inside it is derived from them: `About.tsx` (`STATEMENT`, `STAT`),
+`work/track.ts` (`BUILD`, `STEP`, `TAIL`, `OUT`) and `Experience.tsx` (`HOLD`, `SWAP`).
+Shorten or lengthen a chapter there, not in the CSS. The About numbers roll to their
+real value on a clock once they arrive, so a paused scroll never shows a wrong figure.

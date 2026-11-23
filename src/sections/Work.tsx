@@ -6,7 +6,6 @@ import { motion, worksHover } from '../lib/motion'
 import { scrollToTarget } from '../lib/scroll'
 import { useStore } from '../hooks/useStore'
 import { useCaseStudy } from './work/useCaseStudy'
-import { Coda } from './work/Coda'
 import { BUILD, N, OUT, STEP, stopAt, TAIL, TOTAL } from './work/track'
 import s from './work/Showcase.module.css'
 
@@ -269,7 +268,6 @@ function Showcase() {
         </div>
         {portal}
       </section>
-      <Coda />
     </>
   )
 }

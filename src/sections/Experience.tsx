@@ -9,16 +9,17 @@ const pad = (n: number) => String(n).padStart(2, '0')
 
 // ── The sequence, in viewport-heights of scroll ──────────────────────────
 const PRE = 0.75 // the first role assembles while the stage rises into place
-const HOLD = 0.7 // one role
-const SWAP = 0.55 // the roll from one role to the next
+const HOLD = 0.55 // one role
+const SWAP = 0.45 // the roll from one role to the next
 const POST = 1 // the stage scrolls away
 const PIN = jobs.length * HOLD + (jobs.length - 1) * SWAP
 
 /**
  * Trajectory. One pinned stage, one role at a time: the year in hollow
  * numerals drifting across the scene, the company set as large as it will go,
- * the role as a single label. Between roles the year rolls like an odometer
- * and the name leaves and arrives through its own mask. No descriptions.
+ * the role as a single label. Between roles only the year's changed digits
+ * roll, and the old name is gone before the new one rises, so two names never
+ * share the stage. No descriptions.
  */
 export function Experience() {
   const root = useRef<HTMLElement>(null)
@@ -67,23 +68,44 @@ export function Experience() {
             .to(p.lines, { yPercent: 0, opacity: 1, duration: 0.2, ease: 'power3.out', stagger: 0.03 }, t + after + 0.1)
         const depart = (p: (typeof parts)[number], t: number) =>
           tl
-            .to(p.digits, { yPercent: -45, opacity: 0, duration: 0.34, ease: 'power3.inOut', stagger: 0.035 }, t)
-            .to(p.chars, { yPercent: -55, opacity: 0, duration: 0.22, ease: 'power2.in', stagger: { amount: 0.1 } }, t)
-            .to(p.lines, { yPercent: -55, opacity: 0, duration: 0.16, ease: 'power2.in', stagger: 0.02 }, t)
+            .to(p.chars, { yPercent: -55, opacity: 0, duration: 0.16, ease: 'power2.in', stagger: { amount: 0.05 } }, t)
+            .to(p.lines, { yPercent: -55, opacity: 0, duration: 0.14, ease: 'power2.in', stagger: 0.015 }, t)
+        /** The year as an odometer: digits that stay the same just stay; the others roll. */
+        const rollYear = (from: (typeof parts)[number], to: (typeof parts)[number], t: number) =>
+          Array.from(to.digits).forEach((d, n) => {
+            const old = from.digits[n]
+            if (old && old.textContent === d.textContent) {
+              tl.set(old, { opacity: 0 }, t + 0.1).set(d, { yPercent: 0, opacity: 1 }, t + 0.1)
+            } else {
+              if (old) tl.to(old, { yPercent: -60, opacity: 0, duration: 0.24, ease: 'power2.in' }, t + n * 0.03)
+              tl.to(d, { yPercent: 0, opacity: 1, duration: 0.3, ease: 'power3.out' }, t + 0.1 + n * 0.03)
+            }
+          })
+        const ticks = q('[data-tick]') as HTMLElement[]
+        gsap.set(ticks.slice(1), { yPercent: 60, opacity: 0 })
 
         // The first role forms on the approach and has landed by the time the
         // stage pins (t = PRE), so a jump to #experience arrives on a finished frame.
         tl.to(q('[data-index], [data-count]'), { yPercent: 0, opacity: 1, duration: 0.25, ease: 'power3.out', stagger: 0.05 }, 0.3)
         arrive(parts[0], 0.16, 0.12)
 
-        // Every later one rolls in as the last rolls out: same columns, same
-        // moment, so the year reads as one odometer.
+        // Every later one: the old name clears, then the new one rises in its place.
         parts.forEach((p, i) => {
           if (!i) return
           const t = PRE + i * HOLD + (i - 1) * SWAP
           depart(parts[i - 1], t)
-          arrive(p, t, 0.2)
-          tl.to(q('[data-roll]'), { yPercent: (-100 / parts.length) * i, duration: 0.3, ease: 'power3.inOut' }, t + 0.06)
+          rollYear(parts[i - 1], p, t)
+          tl.to(p.chars, { yPercent: 0, opacity: 1, duration: 0.3, ease: 'power3.out', stagger: { amount: 0.14 } }, t + 0.24).to(
+            p.lines,
+            { yPercent: 0, opacity: 1, duration: 0.2, ease: 'power3.out', stagger: 0.03 },
+            t + 0.34,
+          )
+          // The counter crossfades (no sliding through a mask, so a paused scroll never slices it).
+          tl.to(ticks[i - 1], { yPercent: -60, opacity: 0, duration: 0.16, ease: 'power2.in' }, t + 0.06).to(
+            ticks[i],
+            { yPercent: 0, opacity: 1, duration: 0.2, ease: 'power3.out' },
+            t + 0.2,
+          )
         })
 
         // The numerals drift the whole way through; the line keeps count.
@@ -165,11 +187,11 @@ export function Experience() {
             <span className={s.mask}>
               <span data-count>
                 <span className={s.roll}>
-                  <span className={s.rollStrip} data-roll>
-                    {jobs.map((_, i) => (
-                      <span key={i}>{pad(i + 1)}</span>
-                    ))}
-                  </span>
+                  {jobs.map((_, i) => (
+                    <span key={i} data-tick>
+                      {pad(i + 1)}
+                    </span>
+                  ))}
                 </span>
                 <span className={s.of}>/ {pad(jobs.length)}</span>
               </span>

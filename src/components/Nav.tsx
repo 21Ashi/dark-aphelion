@@ -7,7 +7,7 @@ import { profile, socials } from '../content/profile'
 import { prefersReducedMotion } from '../lib/quality'
 import s from './Nav.module.css'
 
-const navFor = (id: ChapterId): ChapterId => (id === 'skills' ? 'experience' : id)
+const navFor = (id: ChapterId): ChapterId => id
 
 export function Nav() {
   const active = useStore(activeChapter)
@@ -153,7 +153,7 @@ export function Nav() {
         </button>
       </header>
 
-      <div id="site-menu" ref={menu} className={s.menu} aria-hidden={!open} inert={!open}>
+      <div id="site-menu" ref={menu} className={s.menu} data-lenis-prevent aria-hidden={!open} inert={!open}>
         <ol className={s.menuList}>
           {NAV_ITEMS.map((item, i) => (
             <li key={item.id}>

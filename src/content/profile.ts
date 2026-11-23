@@ -8,11 +8,11 @@ export const profile = {
   lastName: 'ASHI',
   greeting: "HELLO, I'M",
   role: 'FULL-STACK DEVELOPER',
-  tagline: 'I build digital experiences where engineering meets imagination.',
+  tagline: 'I build Flutter apps and the servers behind them.',
   location: 'Amman, Jordan',
   coordinates: '31.9539° N — 35.9106° E',
   timezone: 'Asia/Amman',
-  availability: 'Open to full-time roles, freelance projects and interesting collaborations.',
+  availability: 'Open to full-time roles and freelance projects.',
   email: 'mralashi17@gmail.com',
 }
 
@@ -27,8 +27,8 @@ export const socials: SocialLink[] = [
 
 /** About chapter. The paragraph is revealed word by word as you scroll. */
 export const about = {
-  kicker: 'MORE THAN',
-  headline: 'JUST CODE.',
+  kicker: 'FROM REPO',
+  headline: 'TO STORE.',
   intro:
     "I'm a full-stack developer from Amman, Jordan, and I like shipping software that people actually use. " +
     'I take products from an empty repository to the store — Flutter on the front, Node.js and .NET behind it — ' +
@@ -38,21 +38,6 @@ export const about = {
     { label: 'Studied', value: 'Computer Science — Applied Science University' },
     { label: 'Speaks', value: 'Arabic (native) · English (professional)' },
     { label: 'Published', value: '“Wrong Answers” — Android & iOS' },
-  ],
-  // Philosophy copy: written in your voice — rewrite freely.
-  principles: [
-    {
-      title: 'Engineering first',
-      body: 'Clean architecture, typed contracts and boring reliability. The imaginative part only works if the foundation never moves.',
-    },
-    {
-      title: 'Imagination second',
-      body: 'Motion, depth and detail are not decoration. They are how an interface explains itself and how people remember it.',
-    },
-    {
-      title: 'Shipping always',
-      body: 'A product is real when it is in someone’s hands. I optimise for the version that goes live, then make it better.',
-    },
   ],
   stats: [
     { value: 15000, prefix: '', suffix: '+', label: 'Organic downloads', note: '“Wrong Answers”, Android & iOS' },

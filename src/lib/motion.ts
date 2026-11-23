@@ -62,7 +62,6 @@ export const CHAPTERS = [
   { id: 'about', label: 'Origin', nav: 'About' },
   { id: 'work', label: 'Works', nav: 'Projects' },
   { id: 'experience', label: 'Trajectory', nav: 'Experience' },
-  { id: 'skills', label: 'Instruments', nav: 'Experience' },
   { id: 'contact', label: 'Aphelion', nav: 'Contact' },
 ] as const
 

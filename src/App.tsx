@@ -13,7 +13,6 @@ import { Hero } from './sections/Hero'
 import { About } from './sections/About'
 import { Work } from './sections/Work'
 import { Experience } from './sections/Experience'
-import { Skills } from './sections/Skills'
 import { Contact } from './sections/Contact'
 
 // Development only (Shift+P or ?perf); compiled out of production builds.
@@ -131,7 +130,6 @@ export default function App() {
         <About />
         <Work />
         <Experience />
-        <Skills />
         <Contact />
       </main>
     </>

@@ -53,12 +53,16 @@
   line-height: 0.8;
   font-variant-numeric: tabular-nums;
 }
+/* What the number counts, readable at a glance: display type, about a third of the numeral. */
 .counter small {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.22em;
+  font-size: 0.32em;
+  line-height: 1;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
-  color: var(--gray);
+  color: #d2cbc8;
+  font-variation-settings:
+    'wdth' 80,
+    'wght' 500;
 }
 
 /* ── Everything below appears once the stage has assembled ── */

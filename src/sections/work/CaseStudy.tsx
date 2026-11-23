@@ -292,7 +292,7 @@ export function CaseStudy({
         </button>
       </header>
 
-      <div ref={panel} className={s.panel}>
+      <div ref={panel} className={s.panel} data-lenis-prevent>
         <p className={s.kicker} data-cs-in>
           <span className={s.pill}>{project.category}</span>
           {project.year && <span>{project.year}</span>}

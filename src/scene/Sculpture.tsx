@@ -11,7 +11,6 @@ const FORMS: [number, number, number, number, number][] = [
   [0.9, 0.05, 2.2, 0.9, 0.5], // origin — crystalline, the cage takes over
   [0.35, 0.28, 1.2, 0.25, 1.0], // works — restless
   [0.0, 0.1, 2.6, 0.5, 0.7], // trajectory
-  [1.0, 0.02, 1.0, 1.0, 0.3], // instruments — a precise cube
   [0.0, 0.24, 1.3, 0.15, 1.2], // aphelion — molten again, glowing
 ]
 

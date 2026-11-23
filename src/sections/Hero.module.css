@@ -367,7 +367,7 @@
     top: calc(84px + 3vh + 34px + var(--name-size) * 0.84);
   }
   .role {
-    top: calc(84px + 3vh + 34px + var(--name-size) * 1.78);
+    top: calc(84px + 3vh + 34px + var(--name-size) * 2);
     letter-spacing: 0.26em;
     gap: 12px;
   }

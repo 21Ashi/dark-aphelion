@@ -8,7 +8,7 @@ import s from './Contact.module.css'
 /**
  * Aphelion — the finale. As you arrive the camera turns to the star and an
  * eclipse closes over it; the headline assembles from both sides, scrubbed
- * to the same scroll, and "extraordinary" fills with light.
+ * to the same scroll, and "product" fills with light.
  */
 export function Contact() {
   const root = useRef<HTMLElement>(null)
@@ -64,15 +64,15 @@ export function Contact() {
     <section id="contact" ref={root} className={`chapter ${s.contact}`}>
       <div className={s.inner}>
         <span className={s.index}>
-          <span>06</span> — Aphelion
+          <span>05</span> — Aphelion
         </span>
 
         <h2 className={s.headline}>
           <span className={s.line} data-ct-line="1">
-            Have something
+            Have a
           </span>
           <span className={`${s.line} ${s.fill}`} data-ct-line="2" data-ct-fill>
-            extraordinary
+            product
           </span>
           <span className={s.line} data-ct-line="3">
             in mind<span className={s.q}>?</span>
@@ -80,7 +80,7 @@ export function Contact() {
         </h2>
 
         <p className={`serif ${s.sub}`} data-ct-sub>
-          Let’s build something worth remembering.
+          Tell me what it is and who it’s for.
         </p>
 
         <div className={s.mailRow} data-ct-in>
@@ -116,7 +116,7 @@ export function Contact() {
 
       <footer className={s.footer}>
         <span>© {new Date().getFullYear()} Abood Ashi</span>
-        <span className={s.footMid}>Designed &amp; engineered in {profile.location}</span>
+        <span className={s.footMid}>Designed and built in {profile.location}</span>
         <button className={s.top} onClick={() => scrollToTarget('home')} data-cursor="Top">
           Back to top ↑
         </button>

@@ -251,54 +251,6 @@
     'wght' 400;
 }
 
-/* ── 3 · Principles ── */
-.principles {
-  list-style: none;
-  gap: clamp(6px, 1.4vw, 22px);
-}
-.principle {
-  display: flex;
-}
-.principle:nth-child(2) {
-  justify-content: flex-end;
-}
-.pTitle {
-  display: flex;
-  align-items: baseline;
-  gap: 0.16em;
-  white-space: nowrap;
-  font-weight: inherit;
-  font-size: min(12vw, 20vh);
-  line-height: 0.84;
-}
-.principle:nth-child(2) .pTitle {
-  font-size: min(9.2vw, 15.5vh);
-}
-.principle:nth-child(3) .pTitle {
-  font-size: min(14.2vw, 24vh);
-}
-.noun {
-  display: inline-block;
-  font-variation-settings:
-    'wdth' 62,
-    'wght' 820;
-  letter-spacing: -0.012em;
-  text-transform: uppercase;
-  will-change: transform;
-}
-/* The middle line sits further back: hollow, smaller, slower. */
-.principle:nth-child(2) .noun {
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(245, 240, 237, 0.85);
-}
-.adv {
-  display: inline-block;
-  font-size: 1.04em;
-  color: var(--red);
-  text-shadow: 0 0 0.14em rgba(8, 7, 7, 0.8);
-  will-change: transform;
-}
-
 /* ── Phones and upright tablets: the same sequence, composed as a vertical poster ── */
 @media (max-width: 640px), (orientation: portrait) and (max-width: 1024px) {
   .index {
@@ -332,37 +284,6 @@
     font-size: 15px;
   }
 
-  .principles {
-    gap: 2.2vh;
-  }
-  .principle:nth-child(2) {
-    justify-content: flex-start;
-  }
-  .pTitle,
-  .principle:nth-child(2) .pTitle,
-  .principle:nth-child(3) .pTitle {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    width: 100%;
-    font-size: min(18.4vw, 11vh);
-  }
-  .principle:nth-child(2) .pTitle {
-    font-size: min(15.5vw, 9.4vh);
-  }
-  .principle:nth-child(3) .pTitle {
-    font-size: min(25vw, 15vh);
-  }
-  .adv {
-    align-self: flex-end;
-    font-size: min(19vw, 11.5vh);
-    line-height: 0.86;
-    margin-top: -0.06em;
-  }
-  .principle:nth-child(2) .adv {
-    align-self: flex-start;
-    padding-left: 8vw;
-  }
 }
 
 /* ── Reduced motion: no pin, no scrub. The same beats, standing still. ── */

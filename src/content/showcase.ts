@@ -61,7 +61,7 @@ export const SLIDES: Record<string, Slide> = {
     features: [
       { icon: 'wifi-slash', label: 'Works offline' },
       { icon: 'users-three', label: 'Six user roles' },
-      { icon: 'hand-heart', label: 'Made for elders' },
+      { icon: 'hand-heart', label: 'Large type, no swipes' },
     ],
     stack: ['Flutter', 'Django', 'React'],
     front: { src: 'projects/alhammadi-hajj/p1.webp' },

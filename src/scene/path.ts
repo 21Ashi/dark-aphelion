@@ -1,7 +1,7 @@
 import { Vector3 } from 'three'
 
 /**
- * One keyframe per chapter (hero, about, work, experience, skills, contact).
+ * One keyframe per chapter (hero, about, work, experience, contact).
  * The camera glides between them as `motion.chapter` moves continuously.
  */
 type Key = { pos: [number, number, number]; look: [number, number, number]; sculpt: [number, number, number] }
@@ -20,9 +20,7 @@ export const KEYS: Key[] = [
   { pos: [0, 12, -24], look: [0, 9, -140], sculpt: [0, 9, -48] },
   // 3 · Trajectory — drift right through the second gate
   { pos: [7, 4.5, -52], look: [-6, 10, -170], sculpt: [-5, 7, -72] },
-  // 4 · Instruments — drop low and look up at the monoliths
-  { pos: [-2, 1.4, -78], look: [2, 18, -210], sculpt: [3, 6, -96] },
-  // 5 · Aphelion — face the star for the eclipse
+  // 4 · Aphelion — face the star for the eclipse
   { pos: [0, 7, -112], look: [0, 28, -380], sculpt: [0, 12, -150] },
 ]
 
